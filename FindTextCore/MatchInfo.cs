@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
+﻿
+namespace FindTextCore
+{
+    
     public class MatchInfo
     {
         public string FullName { get; set; }
@@ -13,4 +10,6 @@ using System.Threading.Tasks;
 
         public string LineText { get; set; }
     }
-
+    
+    
+}

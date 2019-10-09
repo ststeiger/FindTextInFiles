@@ -1,33 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿
+using System;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace FindTextCore
 {
+    
+    
     class Program
     {
         private static int intHits;
 
-        private static bool boolUseRegularExpression;
-        private static bool boolMatchCase;
-        private static bool boolStringFoundInFile;
+        private static bool boolUseRegularExpression = false;
+        private static bool boolMatchCase = false;
+        private static bool boolStringFoundInFile = false;
         private static string strSearchText;
         private static string strLowerCaseSearchText;
         private static string strSearchExcludePattern;
         
+        
+        
 
 
-        public static void ReadFileToString(string fullFilePath, int intLineCtr, List<MatchInfo> matchInfoList)
+        public static void ReadFileToString(string fullFilePath, int intLineCtr
+            , System.Collections.Generic.List<MatchInfo> matchInfoList)
         {
             while (true)
             {
                 try
                 {
-                    using (FileStream fs = new FileStream(fullFilePath, FileMode.Open))
+                    using (System.IO.FileStream fs = new System.IO.FileStream(fullFilePath, System.IO.FileMode.Open))
                     {
-                        using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(fs, System.Text.Encoding.Default))
                         {
                             string s;
                             string s_lower = "";
@@ -105,35 +109,40 @@ namespace FindTextCore
 
                     }
                 }
-                catch (FileNotFoundException ex)
+                catch (System.IO.FileNotFoundException ex)
                 {
-                    Console.WriteLine("Output file {0} not yet ready ({1})", fullFilePath, ex.Message);
+                    System.Console.WriteLine("Output file {0} not yet ready ({1})", fullFilePath, ex.Message);
                     break;
                 }
-                catch (IOException ex)
+                catch (System.IO.IOException ex)
                 {
-                    Console.WriteLine("Output file {0} not yet ready ({1})", fullFilePath, ex.Message);
+                    System.Console.WriteLine("Output file {0} not yet ready ({1})", fullFilePath, ex.Message);
                     break;
                 }
-                catch (UnauthorizedAccessException ex)
+                catch (System.UnauthorizedAccessException ex)
                 {
-                    Console.WriteLine("Output file {0} not yet ready ({1})", fullFilePath, ex.Message);
+                    System.Console.WriteLine("Output file {0} not yet ready ({1})", fullFilePath, ex.Message);
                     break;
                 }
             }
         }
 
-        public static List<FileInfo> TraverseTree(string filterPattern, string root)
+        public static System.Collections.Generic.List<System.IO.FileInfo> 
+            TraverseTree(string filterPattern, string root)
         {
             string[] arrayExclusionPatterns = strSearchExcludePattern.Split(';');
             for (int i = 0; i < arrayExclusionPatterns.Length; i++)
             {
                 arrayExclusionPatterns[i] = arrayExclusionPatterns[i].ToLower().ToString().Replace("*", "");
             }
-            List<FileInfo> myFileList = new List<FileInfo>();
+            
+            System.Collections.Generic.List<System.IO.FileInfo> myFileList = 
+                new System.Collections.Generic.List<System.IO.FileInfo>();
+            
             // Data structure to hold names of subfolders to be
             // examined for files.
-            Stack<string> dirs = new Stack<string>(20);
+            System.Collections.Generic.Stack<string> dirs = 
+                new System.Collections.Generic.Stack<string>(20);
 
             if (!System.IO.Directory.Exists(root))
             {
@@ -161,14 +170,14 @@ namespace FindTextCore
                 // choice of which exceptions to catch depends entirely on the specific task 
                 // you are intending to perform and also on how much you know with certainty 
                 // about the systems on which this code will run.
-                catch (UnauthorizedAccessException e)
+                catch (System.UnauthorizedAccessException e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Console.WriteLine(e.Message);
                     continue;
                 }
                 catch (System.IO.DirectoryNotFoundException e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Console.WriteLine(e.Message);
                     continue;
                 }
 
@@ -177,15 +186,15 @@ namespace FindTextCore
                 {
                     files = System.IO.Directory.GetFiles(currentDir, filterPattern);
                 }
-                catch (UnauthorizedAccessException e)
+                catch (System.UnauthorizedAccessException e)
                 {
 
-                    Console.WriteLine(e.Message);
+                    System.Console.WriteLine(e.Message);
                     continue;
                 }
                 catch (System.IO.DirectoryNotFoundException e)
                 {
-                    Console.WriteLine(e.Message);
+                    System.Console.WriteLine(e.Message);
                     continue;
                 }
 
@@ -216,7 +225,7 @@ namespace FindTextCore
                         // If file was deleted by a separate application
                         //  or thread since the call to TraverseTree()
                         // then just continue.
-                        Console.WriteLine(e.Message);
+                        System.Console.WriteLine(e.Message);
                         continue;
                     }
                 }
@@ -231,20 +240,37 @@ namespace FindTextCore
 
         static void Main(string[] args)
         {
-            string strSearchPattern = "";
-            string strPathToSearch = "";
-
-            bool boolStringFoundInFile = false;
 
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
+            /*
+        private static bool boolUseRegularExpression;
+        private static bool boolMatchCase;
+        private static bool boolStringFoundInFile;
+        private static string strSearchText;
+        private static string strLowerCaseSearchText;
+        private static string strSearchExcludePattern;
+*/
+
+
+
+            strSearchText = "notepad";
+            strLowerCaseSearchText = strSearchText.ToLower();
+            strSearchExcludePattern = "*.js";
+
+            
+            string strSearchPattern = "*.cs";
+            string strPathToSearch = "/root/github/ststeiger/FindTextInFiles/FindTextInFiles/";
+            
             intHits = 0;
-            int intLineCtr;
-            List<FileInfo> myFileList = TraverseTree(strSearchPattern, strPathToSearch);
+            System.Collections.Generic.List<System.IO.FileInfo> myFileList = TraverseTree(strSearchPattern, strPathToSearch);
             int intFiles = 0;
-            List<MatchInfo> matchInfoList = new List<MatchInfo>();
-            //         myFileList = myFileList.OrderBy(fi => fi.FullName).ToList();
-            Parallel.ForEach(myFileList, myFileInfo => {
+            int intLineCtr;
+            System.Collections.Generic.List<MatchInfo> matchInfoList = 
+                new System.Collections.Generic.List<MatchInfo>();
+            
+            // myFileList = myFileList.OrderBy(fi => fi.FullName).ToList();
+            System.Threading.Tasks.Parallel.ForEach(myFileList, myFileInfo => {
                 intLineCtr = 0;
                 boolStringFoundInFile = false;
                 ReadFileToString(myFileInfo.FullName, intLineCtr, matchInfoList);
@@ -253,22 +279,27 @@ namespace FindTextCore
                     intFiles++;
                 }
             });
+            
             matchInfoList = matchInfoList.Where(mi => mi != null).OrderBy(mi => mi.FullName).ThenBy(mi => mi.LineNumber).ToList();
-            List<string> lines = new List<string>();
+            System.Collections.Generic.List<string> lines = 
+                new System.Collections.Generic.List<string>();
+            
             foreach (var item in matchInfoList)
             {
-                lines.Add("\"" + item.FullName + "\"(" + item.LineNumber + "," + item.LinePosition + "): " + item.LineText.Length.ToString() + " " + item.LineText.Substring(0, item.LineText.Length > 5000 ? 5000 : item.LineText.Length));
-
+                lines.Add("\"" + item.FullName 
+                          + "\"(" + item.LineNumber + "," + item.LinePosition + "): " 
+                          + item.LineText.Length.ToString() 
+                          + " " 
+                          + item.LineText.Substring(0, item.LineText.Length > 5000 ? 5000 : item.LineText.Length));
             }
 
-
-            string strApplicationBinDebug1 = ""; // System.Windows.Forms.Application.StartupPath;
-            string myNewProjectSourcePath1 = strApplicationBinDebug1.Replace("\\bin\\Debug", "");
-
-            string settingsDirectory = ""; // GetAppDirectoryForScript(myActions.ConvertFullFileNameToScriptPath(myNewProjectSourcePath1));
-            using (FileStream fs = new FileStream(settingsDirectory + @"\MatchInfo.txt", FileMode.Create))
+            string searchResultsFile = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            searchResultsFile = System.IO.Path.Combine(searchResultsFile, "MatchInfo.txt");
+            
+            
+            using (System.IO.FileStream fs = new System.IO.FileStream(searchResultsFile, System.IO.FileMode.Create))
             {
-                StreamWriter file = new System.IO.StreamWriter(fs, System.Text.Encoding.Default);
+                System.IO.StreamWriter file = new System.IO.StreamWriter(fs, System.Text.Encoding.Default);
 
                 file.WriteLine(@"-- " + strSearchText + " in " + strPathToSearch + " from " + strSearchPattern + " excl  " + strSearchExcludePattern + " --");
                 foreach (var item in matchInfoList)
@@ -278,9 +309,9 @@ namespace FindTextCore
                 int intUniqueFiles = matchInfoList.Select(x => x.FullName).Distinct().Count();
                 st.Stop();
                 // Get the elapsed time as a TimeSpan value.
-                TimeSpan ts = st.Elapsed;
+                System.TimeSpan ts = st.Elapsed;
                 // Format and display the TimeSpan value.
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                     ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                 file.WriteLine("RunTime " + elapsedTime);
@@ -293,22 +324,25 @@ namespace FindTextCore
                 // Get the elapsed time as a TimeSpan value.
                 ts = st.Elapsed;
                 // Format and display the TimeSpan value.
-                elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                    ts.Hours, ts.Minutes, ts.Seconds,
                    ts.Milliseconds / 10);
-                Console.WriteLine("RunTime " + elapsedTime);
-                Console.WriteLine(intHits.ToString() + " hits");
+                System.Console.WriteLine("RunTime " + elapsedTime);
+                System.Console.WriteLine(intHits.ToString() + " hits");
                 // Console.WriteLine(myFileList.Count().ToString() + " files");
-                Console.WriteLine(intUniqueFiles.ToString() + " files with hits");
-                Console.ReadLine();
-                string strExecutable = @"C:\Program Files (x86)\Notepad++\notepad++.exe";
-                string strContent = settingsDirectory + @"\MatchInfo.txt";
-                System.Diagnostics.Process.Start(strExecutable, string.Concat("", strContent, ""));
+                System.Console.WriteLine(intUniqueFiles.ToString() + " files with hits");
+                
+                
+                string strExecutable = @"notepad.exe";
+                if (System.Environment.OSVersion.Platform == PlatformID.Unix)
+                    strExecutable = "gedit";
+                
+                System.Diagnostics.Process.Start(strExecutable, string.Concat("", searchResultsFile, ""));
                 // myActions.ScriptEndedSuccessfullyUpdateStats();
                 // myActions.MessageBoxShow("RunTime: " + elapsedTime + "\n\r\n\rHits: " + intHits.ToString() + "\n\r\n\rFiles with hits: " + intUniqueFiles.ToString() + "\n\r\n\rPut Cursor on line and\n\r press Ctrl+Alt+N\n\rto view detail page. ");
             }
 
-            Console.WriteLine(" --- Press any key to continue --- ");
+            System.Console.WriteLine(" --- Press any key to continue --- ");
             System.Console.ReadKey();
         }
     }
